@@ -18,12 +18,26 @@ const createCell = picture => {
         top: getTop(),
         bot: getBot()
     }
-    return cell;
+    return cell
 
 }
-
 const getLeft = (picture) => {
     if (picture === 0 || picture === 1 || picture === 2 || picture === 3 || picture === 6 || picture === 7 || picture === 8 || picture === 12) {
+        return true;
+    }
+}
+const getRight = (picture) => {
+    if (picture === 0 || picture === 1 || picture === 3 || picture === 4 || picture === 6 || picture === 9 || picture === 10 || picture === 13) {
+        return true;
+    }
+}
+const getTop = (picture) => {
+    if (picture === 0 || picture === 2 || picture === 3 || picture === 4 || picture === 5 || picture === 8 || picture === 9 || picture === 14) {
+        return true;
+    }
+}
+const getBot = (picture) => {
+    if (picture === 0 || picture === 1 || picture === 2 || picture === 4 || picture === 5 || picture === 7 || picture === 10 || picture === 11) {
         return true;
     }
 }
@@ -38,15 +52,15 @@ const displayLabyrinth = array => {
             content += "<td>";
             content += "<img src='images/" + array[i][j] + ".png' />"
             if (i === nbRow - 1 && j === nbCol - 1) {
-                let chara2Line = 2createCell(5) + 100 * i;
-                let chara2Col = 2createCell(5) + 100 * j;
+                let chara2Line = 25 + 100 * i;
+                let chara2Col = 25 + 100 * j;
                 content += "<img class='character1' src='images/1pixel.png' />"
             }
             if (i === posPlayer[0] && j === posPlayer[1]) {
-                let chara1Line = 2createCell(5) + 100 * posPlayer[0];
-                let chara1Col = 2createCell(5) + 100 * posPlayer[1];
+                let chara1Line = 25 + 100 * posPlayer[0];
+                let chara1Col = 25 + 100 * posPlayer[1];
                 chara1Line += 20;
-                chara1Col += 7createCell(5)0;
+                chara1Col += 750;
                 content += "<img class='character2' src='images/2pixel.png' style='left:" + chara1Col + "px;top:" + chara1Line + "px' />"
 
             }
@@ -59,6 +73,10 @@ const displayLabyrinth = array => {
 }
 displayLabyrinth(gameArray);
 
+const getCell = (i, j) => {
+    return tab[i][j];
+}
+
 document.addEventListener("keyup", function (event) {
     let linePlayer = posPlayer[0];
     let colPlayer = posPlayer[1];
@@ -66,25 +84,33 @@ document.addEventListener("keyup", function (event) {
     switch (event.key) {
         case "ArrowDown":
             if (linePlayer < nbRow - 1) {
-                linePlayer += 1;
+                if (getCell(linePlayer, colPlayer).bot) {
+                    linePlayer += 1;
+                }
             }
             console.log(linePlayer)
             break;
         case "ArrowUp":
             if (linePlayer > 0) {
-                linePlayer -= 1;
+                if (getCell(linePlayer, colPlayer).top) {
+                    linePlayer -= 1;
+                }
             }
             break;
         case "ArrowLeft":
             console.log(colPlayer)
             if (colPlayer > 0) {
-                colPlayer -= 1;
-
+                if (getCell(linePlayer, colPlayer).left) {
+                    colPlayer -= 1;
+                }
             }
             break;
         case "ArrowRight":
             if (colPlayer < nbCol - 1) {
-                colPlayer += 1;
+                if (getCell(linePlayer, colPlayer).right) {
+                    colPlayer += 1;
+                }
+
             }
             break;
         default:
