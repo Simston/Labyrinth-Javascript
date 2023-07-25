@@ -13,21 +13,18 @@
         padding-top: 50px;
         padding-bottom: 50px;
         display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        
+        padding-left: 12px;
 
 }
 .character1{
-    margin-top: 15px;
+    margin-top: 25px;
     width: 70px;
     height: 70px;
     position: absolute;
 }
 .character2{
     display: inline;
-    margin-top: 17px;
+    margin-top: 45px;
     width: 70px;
     height: 70px;
     position: absolute;

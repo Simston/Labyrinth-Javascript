@@ -3,11 +3,15 @@ let nbCol = 4;
 let posPlayer = [0, 0];
 
 const myGame = document.querySelector('#game');
-
+/*
 let line1 = [createCell(5), createCell(10), createCell(1), createCell(7)];
 let line2 = [createCell(5), createCell(14), createCell(5), createCell(5)];
 let line3 = [createCell(4), createCell(1), createCell(8), createCell(5)];
-let line4 = [createCell(14), createCell(9), createCell(12), createCell(9)];
+let line4 = [createCell(14), createCell(9), createCell(12), createCell(9)];*/
+let line1 = [5, 10, 1, 7]
+let line2 = [5, 14, 5, 5];
+let line3 = [4, 1, 8, 5];
+let line4 = [14, 9, 12, 9];
 let gameArray = [line1, line2, line3, line4];
 
 const createCell = picture => {
@@ -59,8 +63,7 @@ const displayLabyrinth = array => {
             if (i === posPlayer[0] && j === posPlayer[1]) {
                 let chara1Line = 25 + 100 * posPlayer[0];
                 let chara1Col = 25 + 100 * posPlayer[1];
-                chara1Line += 20;
-                chara1Col += 750;
+
                 content += "<img class='character2' src='images/2pixel.png' style='left:" + chara1Col + "px;top:" + chara1Line + "px' />"
 
             }
@@ -84,32 +87,42 @@ document.addEventListener("keyup", function (event) {
     switch (event.key) {
         case "ArrowDown":
             if (linePlayer < nbRow - 1) {
+                linePlayer += 1;
+                /*
                 if (getCell(linePlayer, colPlayer).bot) {
                     linePlayer += 1;
-                }
+                }*/
             }
             console.log(linePlayer)
             break;
         case "ArrowUp":
             if (linePlayer > 0) {
+                /*
                 if (getCell(linePlayer, colPlayer).top) {
                     linePlayer -= 1;
-                }
+                }*/
+                linePlayer -= 1;
+
             }
             break;
         case "ArrowLeft":
             console.log(colPlayer)
             if (colPlayer > 0) {
+                /*
                 if (getCell(linePlayer, colPlayer).left) {
                     colPlayer -= 1;
-                }
+                }*/
+                colPlayer -= 1;
             }
             break;
         case "ArrowRight":
             if (colPlayer < nbCol - 1) {
+                colPlayer += 1;
+
+                /*
                 if (getCell(linePlayer, colPlayer).right) {
                     colPlayer += 1;
-                }
+                }*/
 
             }
             break;
