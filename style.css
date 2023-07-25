@@ -17,10 +17,20 @@
 
 }
 .character1{
-    margin-top: 25px;
+    margin-top: 20px;
+    left: 390px;
     width: 70px;
     height: 70px;
     position: absolute;
+}
+.speech-bubble {
+    position: absolute;
+    width: 150px;
+    top: 320px;
+    left: 350px;
+}
+.speech-bubble.hidden{
+    display: none;
 }
 .character2{
     display: inline;
@@ -28,4 +38,16 @@
     width: 70px;
     height: 70px;
     position: absolute;
+}
+.alert{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn{
+    width: 5rem;
+    margin-left: 15px;
+}
+.text-alert{
+    margin: 0;
 }
