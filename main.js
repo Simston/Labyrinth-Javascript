@@ -45,7 +45,7 @@ let gameArray = [line1, line2, line3, line4];
 
 const displayLabyrinth = array => {
     myGame.innerHTML = "";
-    let content = "<table>";
+    let content = "<table class='tab'>";
     for (let i = 0; i < array.length; i++) {
         content += "<tr>";
         for (let j = 0; j < array[i].length; j++) {
@@ -58,11 +58,9 @@ const displayLabyrinth = array => {
                 content += "<img class='speech-bubble hidden' src='images/pixel-speech-bubble.gif' />"
             }
             if (i === posPlayer[0] && j === posPlayer[1]) {
-                let chara1Line = 25 + 100 * posPlayer[0];
-                let chara1Col = 25 + 100 * posPlayer[1];
-
-                content += "<img class='character2' src='images/2pixel.png' style='left:" + chara1Col + "px;top:" + chara1Line + "px' />"
-
+                let chara1Line = 12 + 100 * posPlayer[0];
+                let chara1Col = 15 + 100 * posPlayer[1];
+                content += "<img class='character2' src='images/2pixel.png' style='left: " + chara1Col + "px; top:" + chara1Line + "px;' />";
             }
             content += "</td>";
         }
@@ -70,7 +68,6 @@ const displayLabyrinth = array => {
     }
     content += "</table>";
     myGame.innerHTML = content;
-    displaySpeechBubble();
 
 }
 displayLabyrinth(gameArray);
@@ -123,15 +120,19 @@ document.addEventListener("keyup", function (event) {
     }
     posPlayer = [linePlayer, colPlayer];
     displayLabyrinth(gameArray)
-
-    console.log(event.key);
+    displaySpeechBubble();
 });
 
 const verifIfAtEnd = (posPlayerLine, posPlayerCol) => {
     if (posPlayerLine === (nbRow - 1) && posPlayerCol === (nbCol - 1)) {
         let content = "";
-        content += "<p class='text-alert'>Well done ! Next level : " + (niveauEnCours + 1) + " ?</p>";
-        content += "<button class='btn btn-primary' onClick='launchNextLevel()'> Next </button>"
+        if (niveauEnCours < 1) {
+            content += "<p class='text-alert'>Well done ! Next level : " + (niveauEnCours + 1) + " ?</p>";
+            content += "<button class='btn btn-primary' onClick='launchNextLevel()'> Next </button>";
+        } else {
+            content += "You have won !"
+        }
+
         alert.innerHTML = content;
         alert.classList.remove('d-none');
     }
@@ -149,4 +150,7 @@ function displaySpeechBubble() {
             speechBubble.style.display = 'none';
         }
     }
+}
+function launchNextLevel() {
+
 }

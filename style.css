@@ -13,32 +13,38 @@
         padding-top: 50px;
         padding-bottom: 50px;
         display: flex;
+        justify-content: center;
+    align-items: center;
         padding-left: 12px;
 
 }
+.tab{
+    position: relative;
+}
 .character1{
     margin-top: 20px;
-    left: 390px;
     width: 70px;
     height: 70px;
     position: absolute;
+    top: 50% + 200px; /* Centrer verticalement l'élément par rapport à son parent */
+    left: 50% + 180px; /* Centrer horizontalement l'élément par rapport à son parent */
+
+}
+.character2{
+    position: absolute;
+    width: 70px;
+    height: 70px;
 }
 .speech-bubble {
     position: absolute;
     width: 150px;
-    top: 320px;
+    top: 275px;
     left: 350px;
 }
 .speech-bubble.hidden{
     display: none;
 }
-.character2{
-    display: inline;
-    margin-top: 45px;
-    width: 70px;
-    height: 70px;
-    position: absolute;
-}
+
 .alert{
     display: flex;
     align-items: center;
