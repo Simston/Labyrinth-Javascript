@@ -22,7 +22,7 @@
     position: relative;
 }
 .character1{
-    margin-top: 20px;
+    margin-top: 10px;
     width: 70px;
     height: 70px;
     position: absolute;
@@ -38,8 +38,8 @@
 .speech-bubble {
     position: absolute;
     width: 150px;
-    top: 275px;
-    left: 350px;
+    top: 265px;
+    left: 345px;
 }
 .speech-bubble.hidden{
     display: none;

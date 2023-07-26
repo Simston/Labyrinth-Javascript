@@ -4,7 +4,7 @@ const alert = document.querySelector('.alert');
 let nbRow = 4;
 let nbCol = 4;
 let posPlayer = [0, 0];
-let niveauEnCours = 1;
+let niveauEnCours = 0;
 
 const createCell = picture => {
     let cell = {
@@ -37,13 +37,11 @@ const getBot = (picture) => {
         return true;
     }
 }
-let line1 = [createCell(5), createCell(10), createCell(1), createCell(7)];
-let line2 = [createCell(5), createCell(14), createCell(5), createCell(5)];
-let line3 = [createCell(4), createCell(1), createCell(8), createCell(5)];
-let line4 = [createCell(14), createCell(9), createCell(12), createCell(9)];
-let gameArray = [line1, line2, line3, line4];
 
-const displayLabyrinth = array => {
+let gameArray = null;
+launchNextLevel();
+
+function displayLabyrinth(array) {
     myGame.innerHTML = "";
     let content = "<table class='tab'>";
     for (let i = 0; i < array.length; i++) {
@@ -152,5 +150,21 @@ function displaySpeechBubble() {
     }
 }
 function launchNextLevel() {
+    niveauEnCours++;
+    alert.classList.add("d-none");
+    nbRow = 4;
+    nbCol = 4;
+    posPlayer = [0, 0];
+    gameArray = loadLevel();
 
+    displayLabyrinth(gameArray);
+}
+
+function loadLevel() {
+    let line1 = [createCell(5), createCell(10), createCell(1), createCell(7)];
+    let line2 = [createCell(5), createCell(14), createCell(5), createCell(5)];
+    let line3 = [createCell(4), createCell(1), createCell(8), createCell(5)];
+    let line4 = [createCell(14), createCell(9), createCell(12), createCell(9)];
+    let newLevelArray = [line1, line2, line3, line4];
+    return newLevelArray;
 }
