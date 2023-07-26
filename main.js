@@ -1,3 +1,4 @@
+import { level1 } from './levels.js';
 const myGame = document.querySelector('#game');
 const alert = document.querySelector('.alert');
 
@@ -6,7 +7,7 @@ let nbCol = 4;
 let posPlayer = [0, 0];
 let niveauEnCours = 0;
 
-const createCell = picture => {
+function createCell(picture) {
     let cell = {
         picture: picture,
         left: getLeft(picture),
@@ -17,7 +18,7 @@ const createCell = picture => {
     return cell
 }
 
-const getLeft = (picture) => {
+function getLeft(picture) {
     if (picture === 0 || picture === 1 || picture === 2 || picture === 3 || picture === 6 || picture === 7 || picture === 8 || picture === 12) {
         return true;
     }
@@ -161,10 +162,16 @@ function launchNextLevel() {
 }
 
 function loadLevel() {
-    let line1 = [createCell(5), createCell(10), createCell(1), createCell(7)];
-    let line2 = [createCell(5), createCell(14), createCell(5), createCell(5)];
-    let line3 = [createCell(4), createCell(1), createCell(8), createCell(5)];
-    let line4 = [createCell(14), createCell(9), createCell(12), createCell(9)];
-    let newLevelArray = [line1, line2, line3, line4];
+    let newLevelArray = [];
+
+    for (let i = 0; i < level1.nbRow; i++) {
+        let row = [];
+        console.log(level1)
+        for (let j = 0; j < level1.nbCol; j++) {
+            let val = level1["line" + i]["case" + j];
+            row.push(createCell(val))
+        }
+        newLevelArray.push(row);
+    }
     return newLevelArray;
 }
