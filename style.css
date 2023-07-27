@@ -14,7 +14,7 @@
         padding-bottom: 50px;
         display: flex;
         justify-content: center;
-    align-items: center;
+        align-items: center;
         padding-left: 12px;
 
 }
@@ -23,8 +23,6 @@
 }
 .character1{
     margin-top: 10px;
-    width: 70px;
-    height: 70px;
     position: absolute;
     top: 50% + 200px; /* Centrer verticalement l'élément par rapport à son parent */
     left: 50% + 180px; /* Centrer horizontalement l'élément par rapport à son parent */
@@ -32,14 +30,13 @@
 }
 .character2{
     position: absolute;
-    width: 70px;
-    height: 70px;
+
 }
 .speech-bubble {
     position: absolute;
     width: 150px;
-    top: 265px;
-    left: 345px;
+    margin-left: 40px;
+    transform: translateY(-140px);
 }
 .speech-bubble.hidden{
     display: none;

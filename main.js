@@ -1,11 +1,12 @@
-import { level1 } from './levels.js';
+import { levels } from './levels.js';
 const myGame = document.querySelector('#game');
 const alert = document.querySelector('.alert');
-
-let nbRow = 4;
-let nbCol = 4;
+let niveauEnCours = 2;
+let sizeImage = "";
+let chareSizeImage = "";
+let nbRow = null;
+let nbCol = null;
 let posPlayer = [0, 0];
-let niveauEnCours = 0;
 
 function createCell(picture) {
     let cell = {
@@ -15,7 +16,7 @@ function createCell(picture) {
         top: getTop(picture),
         bot: getBot(picture)
     }
-    return cell
+    return cell;
 }
 
 function getLeft(picture) {
@@ -43,23 +44,27 @@ let gameArray = null;
 launchNextLevel();
 
 function displayLabyrinth(array) {
+    sizeImage = levels["level" + niveauEnCours].sizeImage;
+    chareSizeImage = levels["level" + niveauEnCours].sizeCharacImage;
     myGame.innerHTML = "";
     let content = "<table class='tab'>";
     for (let i = 0; i < array.length; i++) {
         content += "<tr>";
         for (let j = 0; j < array[i].length; j++) {
             content += "<td>";
-            content += "<img src='images/" + array[i][j].picture + ".png' />"
+            content += "<img src='images/" + array[i][j].picture + ".png' style='width:" + sizeImage + "px; height:" + sizeImage + "px;' /> "
             if (i === nbRow - 1 && j === nbCol - 1) {
-                let chara2Line = 25 + 100 * i;
-                let chara2Col = 25 + 100 * j;
-                content += "<img class='character1' src='images/1pixel.png' />"
-                content += "<img class='speech-bubble hidden' src='images/pixel-speech-bubble.gif' />"
+                let chara2Line = 25 + sizeImage * i;
+                let chara2Col = 25 + sizeImage * j;
+                content += "<img class='character1' src='images/1pixel.png' style='width:" + chareSizeImage + "px; height:" + chareSizeImage + "px;' />";
+
             }
             if (i === posPlayer[0] && j === posPlayer[1]) {
-                let chara1Line = 12 + 100 * posPlayer[0];
-                let chara1Col = 15 + 100 * posPlayer[1];
-                content += "<img class='character2' src='images/2pixel.png' style='left: " + chara1Col + "px; top:" + chara1Line + "px;' />";
+                let chara1Line = 12 + sizeImage * posPlayer[0];
+                let chara1Col = 15 + sizeImage * posPlayer[1];
+                content += "<img class='character2' src='images/2pixel.png' style='left: " + chara1Col + "px; top:" + chara1Line + "px; width:" + chareSizeImage + "px; height:" + chareSizeImage + "px;' />";
+                content += "<img class='speech-bubble hidden' src='images/pixel-speech-bubble.gif' />"
+
             }
             content += "</td>";
         }
@@ -70,6 +75,7 @@ function displayLabyrinth(array) {
 
 }
 displayLabyrinth(gameArray);
+
 
 const getCell = (i, j) => {
     return gameArray[i][j];
@@ -84,7 +90,7 @@ document.addEventListener("keyup", function (event) {
             if (linePlayer < nbRow - 1) {
                 if (getCell(linePlayer, colPlayer).bot) {
                     linePlayer += 1;
-                    verifIfAtEnd(linePlayer, colPlayer);
+                    verificationEndGame(linePlayer, colPlayer);
                 }
             }
             console.log(linePlayer)
@@ -93,7 +99,7 @@ document.addEventListener("keyup", function (event) {
             if (linePlayer > 0) {
                 if (getCell(linePlayer, colPlayer).top) {
                     linePlayer -= 1;
-                    verifIfAtEnd(linePlayer, colPlayer);
+                    verificationEndGame(linePlayer, colPlayer);
                 }
             }
             break;
@@ -102,7 +108,7 @@ document.addEventListener("keyup", function (event) {
             if (colPlayer > 0) {
                 if (getCell(linePlayer, colPlayer).left) {
                     colPlayer -= 1;
-                    verifIfAtEnd(linePlayer, colPlayer);
+                    verificationEndGame(linePlayer, colPlayer);
                 }
             }
             break;
@@ -110,7 +116,7 @@ document.addEventListener("keyup", function (event) {
             if (colPlayer < nbCol - 1) {
                 if (getCell(linePlayer, colPlayer).right) {
                     colPlayer += 1;
-                    verifIfAtEnd(linePlayer, colPlayer);
+                    verificationEndGame(linePlayer, colPlayer);
                 }
             }
             break;
@@ -122,18 +128,24 @@ document.addEventListener("keyup", function (event) {
     displaySpeechBubble();
 });
 
-const verifIfAtEnd = (posPlayerLine, posPlayerCol) => {
+const verificationEndGame = (posPlayerLine, posPlayerCol) => {
     if (posPlayerLine === (nbRow - 1) && posPlayerCol === (nbCol - 1)) {
         let content = "";
-        if (niveauEnCours < 1) {
+        let nextLevel = false;
+
+        if (niveauEnCours < levels.nbLevels) {
             content += "<p class='text-alert'>Well done ! Next level : " + (niveauEnCours + 1) + " ?</p>";
-            content += "<button class='btn btn-primary' onClick='launchNextLevel()'> Next </button>";
+            content += "<button id='nextLevelButton' class='btn btn-primary'> Next </button>";
+            nextLevel = true;
         } else {
             content += "You have won !"
         }
-
         alert.innerHTML = content;
         alert.classList.remove('d-none');
+        if (nextLevel) {
+            document.querySelector('#nextLevelButton').addEventListener('click', launchNextLevel);
+        }
+
     }
 }
 function displaySpeechBubble() {
@@ -152,23 +164,24 @@ function displaySpeechBubble() {
 }
 function launchNextLevel() {
     niveauEnCours++;
+
     alert.classList.add("d-none");
-    nbRow = 4;
-    nbCol = 4;
+    nbRow = levels["level" + niveauEnCours].nbRow;
+    nbCol = levels["level" + niveauEnCours].nbCol;
     posPlayer = [0, 0];
     gameArray = loadLevel();
 
     displayLabyrinth(gameArray);
+
 }
 
 function loadLevel() {
     let newLevelArray = [];
 
-    for (let i = 0; i < level1.nbRow; i++) {
+    for (let i = 0; i < levels["level" + niveauEnCours].nbRow; i++) {
         let row = [];
-        console.log(level1)
-        for (let j = 0; j < level1.nbCol; j++) {
-            let val = level1["line" + i]["case" + j];
+        for (let j = 0; j < levels["level" + niveauEnCours].nbCol; j++) {
+            let val = levels["level" + niveauEnCours]["line" + i]["case" + j];
             row.push(createCell(val))
         }
         newLevelArray.push(row);
