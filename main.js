@@ -1,12 +1,15 @@
 import { levels } from './levels.js';
 const myGame = document.querySelector('#game');
 const alert = document.querySelector('.alert');
-let niveauEnCours = 2;
+let niveauEnCours = 0;
 let sizeImage = "";
 let chareSizeImage = "";
 let nbRow = null;
 let nbCol = null;
+let partyStart = true;
 let posPlayer = [0, 0];
+let mazeSave = [];
+
 
 function createCell(picture) {
     let cell = {
@@ -72,10 +75,14 @@ function displayLabyrinth(array) {
     }
     content += "</table>";
     myGame.innerHTML = content;
-
+    if (partyStart) {
+        for (let i = 0; i < levels["level" + niveauEnCours].nbRow; i++) {
+            mazeSave.push(new Array(levels["level" + niveauEnCours].nbCol).fill(0));
+        }
+        partyStart = false;
+    }
 }
 displayLabyrinth(gameArray);
-
 
 const getCell = (i, j) => {
     return gameArray[i][j];
@@ -148,6 +155,7 @@ const verificationEndGame = (posPlayerLine, posPlayerCol) => {
 
     }
 }
+
 function displaySpeechBubble() {
     if (posPlayer[0] === nbRow - 1 && posPlayer[1] === nbCol - 1) {
         const speechBubble = document.querySelector('.speech-bubble');
@@ -175,6 +183,7 @@ function launchNextLevel() {
 
 }
 
+
 function loadLevel() {
     let newLevelArray = [];
 
@@ -188,3 +197,67 @@ function loadLevel() {
     }
     return newLevelArray;
 }
+function aiResolve() {
+    let linePlayer = posPlayer[0];
+    let colPlayer = posPlayer[1];
+    let counterLaby = 1;
+
+    const getRadar = () => getCell(linePlayer, colPlayer);
+
+    const move = () => {
+        const radar = getRadar();
+
+        // Vérifier la possibilité de déplacement verticalement uniquement
+        if (radar.bot && mazeSave[linePlayer][colPlayer] !== "closed") {
+            const newRadar = getRadar();
+            mazeSave[linePlayer][colPlayer] = counterLaby;
+            counterLaby++;
+
+            let possibleBot = getCell(linePlayer + 1, colPlayer).bot;
+            console.log(possibleBot);
+
+            if (possibleBot) {
+                linePlayer += 1;
+            } else {
+                console.log("IA bloquée. Arrêt du mouvement BOT .");
+                mazeSave[linePlayer][colPlayer] = 'closed';
+                return; // Arrêter l'appel récursif ici
+            }
+        }
+        /*else if (radar.top) {
+            linePlayer -= 1;
+        }
+
+        // Vérifier la possibilité de déplacement horizontalement uniquement
+        if (radar.right) {
+            colPlayer += 1;
+        } else if (radar.left) {
+            colPlayer -= 1;
+        }*/
+
+        //console.log(posPlayer);
+        verificationEndGame(linePlayer, colPlayer);
+        displayLabyrinth(gameArray);
+        displaySpeechBubble();
+
+        // Vérifier si l'IA est bloquée dans la même position après le déplacement
+        const newRadar = getRadar();
+
+        if (!newRadar.bot && !newRadar.right && !newRadar.left) {
+            console.log("IA bloquée. Arrêt du mouvement.");
+            mazeSave[linePlayer][colPlayer] = 'closed';
+            console.log(mazeSave);
+            return; // Arrêter l'appel récursif ici
+        }
+        else {
+            setTimeout(move, 500); // Chaque déplacement aura lieu toutes les 500 millisecondes
+        }
+    };
+
+    const moveInterval = setTimeout(move, 500); // chaque déplacement aura lieu toutes les 500 millisecondes
+    console.log(mazeSave);
+}
+// Appeler aiResolve() dès que la page est chargée
+document.addEventListener("DOMContentLoaded", function () {
+    aiResolve();
+});
