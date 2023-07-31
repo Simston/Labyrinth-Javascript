@@ -1,5 +1,7 @@
 const myGame = document.querySelector('#game');
 const alert = document.querySelector('.alert');
+const iaCheckBox = document.querySelector('#IA');
+
 var niveauEnCours = 0;
 var sizeImage = "";
 var chareSizeImage = "";
@@ -7,10 +9,8 @@ var nbRow = null;
 var nbCol = null;
 var posPlayer = [0, 0];
 
-var gameState = {
-    posPlayer: [0, 0],
-    gameArray: null
-};
+var endGame = false;
+var isIaOn = false;
 
 function createCell(picture) {
     var cell = {
@@ -42,6 +42,12 @@ const getBot = (picture) => {
     if (picture === 0 || picture === 1 || picture === 2 || picture === 4 || picture === 5 || picture === 7 || picture === 10 || picture === 11) {
         return true;
     }
+}
+
+function startIA() {
+    iaCheckBox.setAttribute('disabled', 'disabled')
+    isIaOn = true;
+    IA.startIA();
 }
 
 var gameArray = null;
@@ -84,53 +90,58 @@ function getCell(i, j) {
     return gameArray[i][j];
 }
 
-
 document.addEventListener("keyup", function (event) {
-    var linePlayer = posPlayer[0];
-    var colPlayer = posPlayer[1];
+    if (!isIaOn) {
+        var linePlayer = posPlayer[0];
+        var colPlayer = posPlayer[1];
 
-    switch (event.key) {
-        case "ArrowDown":
-            if (linePlayer < nbRow - 1) {
-                if (getCell(linePlayer, colPlayer).bot) {
-                    linePlayer += 1;
-                    verificationEndGame(linePlayer, colPlayer);
+        switch (event.key) {
+            case "ArrowDown":
+                if (linePlayer < nbRow - 1) {
+                    if (getCell(linePlayer, colPlayer).bot) {
+                        linePlayer += 1;
+                        verificationEndGame(linePlayer, colPlayer);
+                    }
                 }
-            }
-            console.log(linePlayer)
-            break;
-        case "ArrowUp":
-            if (linePlayer > 0) {
-                if (getCell(linePlayer, colPlayer).top) {
-                    linePlayer -= 1;
-                    verificationEndGame(linePlayer, colPlayer);
+                console.log(linePlayer)
+                break;
+            case "ArrowUp":
+                if (linePlayer > 0) {
+                    if (getCell(linePlayer, colPlayer).top) {
+                        linePlayer -= 1;
+                        verificationEndGame(linePlayer, colPlayer);
+                    }
                 }
-            }
-            break;
-        case "ArrowLeft":
-            console.log(colPlayer)
-            if (colPlayer > 0) {
-                if (getCell(linePlayer, colPlayer).left) {
-                    colPlayer -= 1;
-                    verificationEndGame(linePlayer, colPlayer);
+                break;
+            case "ArrowLeft":
+                console.log(colPlayer)
+                if (colPlayer > 0) {
+                    if (getCell(linePlayer, colPlayer).left) {
+                        colPlayer -= 1;
+                        verificationEndGame(linePlayer, colPlayer);
+                    }
                 }
-            }
-            break;
-        case "ArrowRight":
-            if (colPlayer < nbCol - 1) {
-                if (getCell(linePlayer, colPlayer).right) {
-                    colPlayer += 1;
-                    verificationEndGame(linePlayer, colPlayer);
+                break;
+            case "ArrowRight":
+                if (colPlayer < nbCol - 1) {
+                    if (getCell(linePlayer, colPlayer).right) {
+                        colPlayer += 1;
+                        verificationEndGame(linePlayer, colPlayer);
+                    }
                 }
-            }
-            break;
-        default:
-            break;
+                break;
+            default:
+                break;
+        }
+        posPlayer = [linePlayer, colPlayer];
+        move();
     }
-    posPlayer = [linePlayer, colPlayer];
-    displayLabyrinth(gameArray)
-    displaySpeechBubble();
 });
+
+function move() {
+    displayLabyrinth(gameArray);
+    displaySpeechBubble();
+}
 
 
 function move() {
@@ -158,7 +169,7 @@ function verificationEndGame(posPlayerLine, posPlayerCol) {
         if (nextLevel) {
             document.querySelector('#nextLevelButton').addEventListener('click', launchNextLevel);
         }
-
+        endGame = true;
     }
 }
 function displaySpeechBubble() {
@@ -190,6 +201,11 @@ function launchNextLevel() {
 
 function loadLevel() {
     var newLevelArray = [];
+    isIaOn = false;
+    endGame = false;
+    IA.positionPastArray = [];
+    iaCheckBox.removeAttribute('disabled');
+    iaCheckBox.checked = false;
 
     for (var i = 0; i < levels["level" + niveauEnCours].nbRow; i++) {
         var row = [];

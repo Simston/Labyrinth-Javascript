@@ -6,7 +6,7 @@ var levels = {
         sizeImage: 100,
         sizeCharacImage: 70,
         line0: {
-            "case0": 5,
+            "case0": 11,
             "case1": 10,
             "case2": 1,
             "case3": 7
@@ -27,7 +27,7 @@ var levels = {
             "case0": 14,
             "case1": 9,
             "case2": 12,
-            "case3": 9,
+            "case3": 14,
         }
     },
     level2: {
