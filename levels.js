@@ -1,4 +1,4 @@
-let levels = {
+var levels = {
     nbLevels: 3,
     level1: {
         nbRow: 4,
@@ -138,4 +138,3 @@ let levels = {
         }
     }
 }
-export { levels };

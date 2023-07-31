@@ -1,15 +1,19 @@
-import { levels } from './levels.js';
 const myGame = document.querySelector('#game');
 const alert = document.querySelector('.alert');
-let niveauEnCours = 2;
-let sizeImage = "";
-let chareSizeImage = "";
-let nbRow = null;
-let nbCol = null;
-let posPlayer = [0, 0];
+var niveauEnCours = 0;
+var sizeImage = "";
+var chareSizeImage = "";
+var nbRow = null;
+var nbCol = null;
+var posPlayer = [0, 0];
+
+var gameState = {
+    posPlayer: [0, 0],
+    gameArray: null
+};
 
 function createCell(picture) {
-    let cell = {
+    var cell = {
         picture: picture,
         left: getLeft(picture),
         right: getRight(picture),
@@ -40,28 +44,28 @@ const getBot = (picture) => {
     }
 }
 
-let gameArray = null;
+var gameArray = null;
 launchNextLevel();
 
 function displayLabyrinth(array) {
     sizeImage = levels["level" + niveauEnCours].sizeImage;
     chareSizeImage = levels["level" + niveauEnCours].sizeCharacImage;
     myGame.innerHTML = "";
-    let content = "<table class='tab'>";
-    for (let i = 0; i < array.length; i++) {
+    var content = "<table class='tab'>";
+    for (var i = 0; i < array.length; i++) {
         content += "<tr>";
-        for (let j = 0; j < array[i].length; j++) {
+        for (var j = 0; j < array[i].length; j++) {
             content += "<td>";
             content += "<img src='images/" + array[i][j].picture + ".png' style='width:" + sizeImage + "px; height:" + sizeImage + "px;' /> "
             if (i === nbRow - 1 && j === nbCol - 1) {
-                let chara2Line = 25 + sizeImage * i;
-                let chara2Col = 25 + sizeImage * j;
+                var chara2Line = 25 + sizeImage * i;
+                var chara2Col = 25 + sizeImage * j;
                 content += "<img class='character1' src='images/1pixel.png' style='width:" + chareSizeImage + "px; height:" + chareSizeImage + "px;' />";
 
             }
             if (i === posPlayer[0] && j === posPlayer[1]) {
-                let chara1Line = 12 + sizeImage * posPlayer[0];
-                let chara1Col = 15 + sizeImage * posPlayer[1];
+                var chara1Line = 12 + sizeImage * posPlayer[0];
+                var chara1Col = 15 + sizeImage * posPlayer[1];
                 content += "<img class='character2' src='images/2pixel.png' style='left: " + chara1Col + "px; top:" + chara1Line + "px; width:" + chareSizeImage + "px; height:" + chareSizeImage + "px;' />";
                 content += "<img class='speech-bubble hidden' src='images/pixel-speech-bubble.gif' />"
 
@@ -76,14 +80,14 @@ function displayLabyrinth(array) {
 }
 displayLabyrinth(gameArray);
 
-
-const getCell = (i, j) => {
+function getCell(i, j) {
     return gameArray[i][j];
 }
 
+
 document.addEventListener("keyup", function (event) {
-    let linePlayer = posPlayer[0];
-    let colPlayer = posPlayer[1];
+    var linePlayer = posPlayer[0];
+    var colPlayer = posPlayer[1];
 
     switch (event.key) {
         case "ArrowDown":
@@ -128,10 +132,19 @@ document.addEventListener("keyup", function (event) {
     displaySpeechBubble();
 });
 
-const verificationEndGame = (posPlayerLine, posPlayerCol) => {
+
+function move() {
+    var linePlayer = posPlayer[0];
+    var colPlayer = posPlayer[1];
+    displayLabyrinth(gameArray);
+    verificationEndGame(linePlayer, colPlayer);
+    displaySpeechBubble();
+}
+
+function verificationEndGame(posPlayerLine, posPlayerCol) {
     if (posPlayerLine === (nbRow - 1) && posPlayerCol === (nbCol - 1)) {
-        let content = "";
-        let nextLevel = false;
+        var content = "";
+        var nextLevel = false;
 
         if (niveauEnCours < levels.nbLevels) {
             content += "<p class='text-alert'>Well done ! Next level : " + (niveauEnCours + 1) + " ?</p>";
@@ -176,12 +189,12 @@ function launchNextLevel() {
 }
 
 function loadLevel() {
-    let newLevelArray = [];
+    var newLevelArray = [];
 
-    for (let i = 0; i < levels["level" + niveauEnCours].nbRow; i++) {
-        let row = [];
-        for (let j = 0; j < levels["level" + niveauEnCours].nbCol; j++) {
-            let val = levels["level" + niveauEnCours]["line" + i]["case" + j];
+    for (var i = 0; i < levels["level" + niveauEnCours].nbRow; i++) {
+        var row = [];
+        for (var j = 0; j < levels["level" + niveauEnCours].nbCol; j++) {
+            var val = levels["level" + niveauEnCours]["line" + i]["case" + j];
             row.push(createCell(val))
         }
         newLevelArray.push(row);
