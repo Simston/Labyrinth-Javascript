@@ -114,7 +114,6 @@ document.addEventListener("keyup", function (event) {
                 }
                 break;
             case "ArrowLeft":
-                console.log(colPlayer)
                 if (colPlayer > 0) {
                     if (getCell(linePlayer, colPlayer).left) {
                         colPlayer -= 1;
@@ -204,6 +203,7 @@ function loadLevel() {
     isIaOn = false;
     endGame = false;
     IA.positionPastArray = [];
+    IA.positionBlocked = [];
     iaCheckBox.removeAttribute('disabled');
     iaCheckBox.checked = false;
 

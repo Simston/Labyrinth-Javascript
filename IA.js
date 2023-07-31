@@ -1,5 +1,7 @@
 var IA = {
     positionPastArray: [],
+    positionBlocked: [],
+
     startIA: function () {
         if (!endGame) {
             this.movePlayer();
@@ -12,6 +14,9 @@ var IA = {
 
     movePlayer: function () {
         var possibilities = this.getPossibilities();
+        if (possibilities.length === 1) {
+            this.positionBlocked.push(posPlayer);
+        }
         posPlayer = this.getBestPossibility(possibilities);
         this.saveCurrentPosition(posPlayer);
         console.log(this.positionPastArray);
@@ -19,20 +24,37 @@ var IA = {
 
     getPossibilities: function () {
         var possibilities = [];
+        let linePlayer = posPlayer[0];
+        let colPlayer = posPlayer[1];
 
-        if (getCell(posPlayer[0], posPlayer[1]).bot) {
-            possibilities.push([posPlayer[0] + 1, posPlayer[1]])
+        if (linePlayer < nbRow - 1) {
+            if (getCell(posPlayer[0], posPlayer[1]).bot) {
+                if (!this.isPositionBlocked([posPlayer[0] + 1, posPlayer[1]])) {
+                    possibilities.push([posPlayer[0] + 1, posPlayer[1]]);
+                }
+            }
         }
-        if (getCell(posPlayer[0], posPlayer[1]).top) {
-            possibilities.push([posPlayer[0] - 1, posPlayer[1]])
+        if (linePlayer > 0) {
+            if (getCell(posPlayer[0], posPlayer[1]).top) {
+                if (!this.isPositionBlocked([posPlayer[0] - 1, posPlayer[1]])) {
+                    possibilities.push([posPlayer[0] - 1, posPlayer[1]])
+                }
+            }
         }
-        if (getCell(posPlayer[0], posPlayer[1]).right) {
-            possibilities.push([posPlayer[0], posPlayer[1] + 1])
+        if (colPlayer < nbCol - 1) {
+            if (getCell(posPlayer[0], posPlayer[1]).right) {
+                if (!this.isPositionBlocked([posPlayer[0], posPlayer[1] + 1])) {
+                    possibilities.push([posPlayer[0], posPlayer[1] + 1])
+                }
+            }
         }
-        if (getCell(posPlayer[0], posPlayer[1]).left) {
-            possibilities.push([posPlayer[0], posPlayer[1] - 1])
+        if (colPlayer > 0) {
+            if (getCell(posPlayer[0], posPlayer[1]).left) {
+                if (!this.isPositionBlocked([posPlayer[0], posPlayer[1] - 1])) {
+                    possibilities.push([posPlayer[0], posPlayer[1] - 1]);
+                }
+            }
         }
-
         return possibilities;
     },
 
@@ -84,6 +106,14 @@ var IA = {
             }
         }
         return 0;
+    },
 
+    isPositionBlocked: function (position) {
+        for (let i = 0; i < this.positionBlocked.length; i++) {
+            if (this.positionBlocked[i][0] === position[0] && this.positionBlocked[i][1] === position[1]) {
+                return true;
+            }
+        }
+        return false;
     }
 }
